@@ -4,60 +4,31 @@
 
 ## 项目简介
 
-toolsAI 是一个个人AI工具作品集网站，展示如何利用AI技术提升各行各业工作效率。首个功能为"一键复刻公众号"，通过AI二创文章+智能排版，帮助内容创作者快速生成高质量公众号文章。
+toolsAI 是一个个人AI工具作品集网站，展示如何利用AI技术提升各行各业工作效率。核心功能包括「一键复刻公众号」和「内容工厂」。
 
-## 项目特点
+## 功能特性
 
-- ✨ **AI驱动**: 使用通义千问大模型进行智能内容二创
-- 🎨 **Apple风格**: 现代化、丝滑的用户体验
-- ⚡ **高效快捷**: 60秒完成文章二创+排版，效率提升10倍
-- 🎯 **精准智能**: 深度理解内容，生成高质量二创文章
+### 🔄 一键复刻公众号
+通过AI二创文章+智能排版，帮助内容创作者快速生成高质量公众号文章。
+
+### 🏭 内容工厂
+- **选题分析**：输入关键词，分析公众号热门文章
+- **搜一搜**：实时搜索公众号文章，支持时间范围和排序筛选
+- **内容创作**：基于分析结果创作新文章（开发中）
 
 ## 技术栈
 
 ### 前端
-- **框架**: React 18 + TypeScript
-- **构建**: Vite
-- **样式**: Tailwind CSS
-- **动画**: Framer Motion
-- **路由**: React Router
+- React 18 + TypeScript
+- Vite + Tailwind CSS
+- Zustand 状态管理
 
 ### 后端
-- **运行时**: Node.js 18+
-- **框架**: Express
-- **语言**: TypeScript
-- **爬虫**: Puppeteer
-- **AI**: 通义千问API
-
-## 项目结构
-
-```
-toolsAI/
-├── frontend/              # 前端项目
-│   ├── src/
-│   │   ├── components/   # 组件
-│   │   │   ├── layout/  # 布局组件
-│   │   │   └── ui/      # UI组件
-│   │   ├── pages/        # 页面
-│   │   ├── store/        # 状态管理
-│   │   ├── services/     # API服务
-│   │   ├── lib/          # 工具函数
-│   │   └── App.tsx
-│   ├── package.json
-│   └── vite.config.ts
-├── backend/              # 后端项目
-│   ├── src/
-│   │   ├── config/       # 配置
-│   │   ├── controllers/  # 控制器
-│   │   ├── services/     # 业务逻辑
-│   │   ├── routes/       # 路由
-│   │   ├── types/        # 类型定义
-│   │   └── index.ts      # 入口文件
-│   ├── package.json
-│   └── tsconfig.json
-├── PRD.md                # 产品需求文档
-└── README.md             # 本文件
-```
+- Node.js 18+ / Express
+- TypeScript
+- SQLite (better-sqlite3)
+- Puppeteer 爬虫
+- 通义千问 API
 
 ## 快速开始
 
@@ -69,40 +40,36 @@ toolsAI/
 ### 1. 克隆项目
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/maomyu/toolsAI.git
 cd toolsAI
 ```
 
 ### 2. 安装依赖
 
 ```bash
-# 安装前端依赖
-cd frontend
+# 安装后端依赖
+cd backend
 npm install
 
-# 安装后端依赖
-cd ../backend
+# 安装前端依赖
+cd ../frontend
 npm install
 ```
 
 ### 3. 配置环境变量
 
-进入后端目录，复制并配置环境变量：
+后端环境变量（可选）：
 
 ```bash
 cd backend
 cp .env.example .env
 ```
 
-编辑 `.env` 文件，填写通义千问API密钥：
-
-```env
-DASHSCOPE_API_KEY=your_api_key_here
-```
+`.env` 文件默认配置即可，无需修改。
 
 ### 4. 启动服务
 
-**启动后端**（在 backend 目录）:
+**启动后端**（在 backend 目录）：
 
 ```bash
 npm run dev
@@ -110,7 +77,9 @@ npm run dev
 
 后端将运行在 `http://localhost:3001`
 
-**启动前端**（在 frontend 目录）:
+> 首次启动会自动创建 SQLite 数据库文件 `backend/data/factory.db`
+
+**启动前端**（在 frontend 目录）：
 
 ```bash
 npm run dev
@@ -118,149 +87,82 @@ npm run dev
 
 前端将运行在 `http://localhost:5173`
 
-### 5. 访问应用
+### 5. 配置 API Key
 
-打开浏览器访问 `http://localhost:5173`
+打开浏览器访问 `http://localhost:5173/factory/settings`，在「系统设置」页面配置：
 
-## 核心功能
+1. **通义千问 API Key**：用于 AI 内容生成和选题分析
+   - 获取地址：[阿里云百炼控制台](https://bailian.console.aliyun.com/)
+
+2. **极致数据 API Key**：用于获取公众号文章数据（阅读量、点赞数等）
+   - 获取地址：[大家查](https://www.dajiala.com/)
+
+## 使用指南
 
 ### 一键复刻公众号
 
-输入两个链接：
-1. **内容链接**: 需要二创的文章
-2. **样式链接**: 排版参考的文章
+访问 `http://localhost:5173/tools/wechat`
 
-系统自动完成：
-- 🕷️ 爬取文章内容和样式
-- 🤖 AI智能二创文章
-- 🎨 提取并应用样式
-- 📋 生成可直接粘贴的HTML
+1. 输入**内容链接**（需要二创的文章）
+2. 输入**样式链接**（排版参考的文章）
+3. 选择二创类型和写作风格
+4. 点击「一键生成」，等待 30-60 秒
+5. 复制 HTML，粘贴到微信公众号编辑器
 
-## 使用教程
+### 内容工厂 - 选题分析
 
-### 1️⃣ 访问工具页面
+访问 `http://localhost:5173/factory/analysis`
 
-打开浏览器访问：`http://localhost:5173/tools/wechat`
+1. 点击「搜一搜」Tab
+2. 输入关键词（如「AI」「副业」）
+3. 选择时间范围和排序方式
+4. 点击搜索，查看热门文章列表
+5. 分析文章数据（阅读量、点赞数等）
 
-### 2️⃣ 输入链接
+## 项目结构
 
-- **内容来源链接**: 粘贴需要进行二创的公众号文章链接
-- **样式参考链接**: 粘贴排版样式参考的公众号文章链接
+```
+toolsAI/
+├── frontend/              # 前端项目
+│   ├── src/
+│   │   ├── components/   # UI组件
+│   │   ├── pages/        # 页面
+│   │   ├── store/        # Zustand状态管理
+│   │   └── services/     # API调用
+├── backend/              # 后端项目
+│   ├── src/
+│   │   ├── controllers/  # API控制器
+│   │   ├── services/     # 业务逻辑
+│   │   ├── routes/       # 路由定义
+│   │   └── models/       # 数据库模型
+│   └── data/             # SQLite数据库文件（自动创建）
+└── README.md
+```
 
-### 3️⃣ 选择选项
+## API 接口
 
-- **二创类型**:
-  - `扩展内容`: 在原有基础上增加细节和说明
-  - `精简内容`: 提炼核心观点，缩短篇幅
-  - `重构表达`: 保持原意，换种表达方式
+| Method | Path | 描述 |
+|--------|------|------|
+| POST | `/api/recreate` | 一键复刻公众号文章 |
+| POST | `/api/factory/search` | 搜索公众号文章 |
+| GET | `/api/factory/settings` | 获取系统设置 |
+| POST | `/api/factory/settings` | 更新系统设置 |
 
-- **写作风格**:
-  - `轻松活泼`: 适合日常分享
-  - `正式专业`: 适合商务场景
-  - `权威深度`: 适合专业分析
-
-### 4️⃣ 生成文章
-
-点击"✨ 一键生成"按钮，等待30-60秒：
-
-1. 🕷️ 爬取文章内容和样式
-2. 🤖 AI进行智能二创
-3. 🎨 提取并应用样式
-4. 📋 生成可直接粘贴的HTML
-
-### 5️⃣ 复制使用
-
-- 点击"📋 复制HTML"按钮
-- 打开微信公众号编辑器
-- 直接粘贴（Ctrl+V / Cmd+V）
-- 完成发布！
-
-## 开发指南
-
-### 前端开发
+## 开发命令
 
 ```bash
+# 前端
 cd frontend
 npm run dev        # 开发服务器
 npm run build      # 构建生产版本
-npm run preview    # 预览构建结果
-```
 
-### 后端开发
-
-```bash
+# 后端
 cd backend
 npm run dev        # 开发服务器（热重载）
-npm run build      # 编译TypeScript
-npm start          # 启动生产服务器
+npm run build      # 编译 TypeScript
+npm start          # 生产模式
 ```
-
-### 添加新功能
-
-1. 在 `PRD.md` 中定义需求
-2. 在 `backend/src/services/` 添加业务逻辑
-3. 在 `backend/src/controllers/` 添加API端点
-4. 在 `frontend/src/pages/` 创建前端页面
-5. 在 `frontend/src/components/` 添加UI组件
-
-## API文档
-
-### POST /api/recreate
-
-一键复刻公众号文章
-
-**请求**:
-```json
-{
-  "contentUrl": "https://mp.weixin.qq.com/s/xxx",
-  "styleUrl": "https://mp.weixin.qq.com/s/yyy",
-  "options": {
-    "type": "expand",
-    "style": "casual",
-    "targetLength": 2000
-  }
-}
-```
-
-**响应**:
-```json
-{
-  "success": true,
-  "data": {
-    "html": "<section>...</section>",
-    "title": "二创后的标题",
-    "summary": "已扩展至2000字",
-    "meta": {
-      "processingTime": 45000,
-      "tokensUsed": 2500
-    }
-  }
-}
-```
-
-## 未来规划
-
-- [ ] AI小红书笔记生成器
-- [ ] AI文档总结器
-- [ ] AI金句提取器
-- [ ] AI竞品分析报告
-- [ ] 用户系统和历史记录
-- [ ] 更多AI工具...
-
-## 贡献指南
-
-本项目为个人作品集，暂不接受外部贡献。
 
 ## 许可证
 
 MIT License
-
-## 联系方式
-
-- 📧 Email: contact@example.com
-- 💬 微信: your-wechat-id
-- 🌐 GitHub: [your-github]
-
----
-
-**注意**: 本项目仅用于技术展示，请勿用于商业用途。使用时请遵守相关法律法规和平台服务条款。
