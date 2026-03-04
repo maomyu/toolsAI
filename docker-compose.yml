@@ -1,0 +1,72 @@
+# ============================================================
+# toolsAI Docker Compose 配置
+# 用于本地开发和生产部署
+# ============================================================
+
+version: '3.8'
+
+services:
+  # ========================================
+  # Redis - 任务队列和缓存
+  # ========================================
+  redis:
+    image: redis:7-alpine
+    container_name: toolsai-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ========================================
+  # toolsAI 后端服务（可选，用于完整部署）
+  # ========================================
+  # toolsai:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: toolsai-backend
+  #   ports:
+  #     - "3001:3001"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=3001
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+  #     - DASHSCOPE_MODEL=qwen-turbo
+  #     - CORS_ORIGIN=${CORS_ORIGIN}
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+
+volumes:
+  redis_data:
+    driver: local
+
+# ============================================================
+# 使用说明
+# ============================================================
+#
+# 本地开发（只启动 Redis）:
+#   docker-compose up -d redis
+#
+# 完整部署（后端 + Redis）:
+#   取消注释 toolsai 服务，然后:
+#   docker-compose up -d
+#
+# 查看日志:
+#   docker-compose logs -f
+#
+# 停止服务:
+#   docker-compose down
+#
+# 清理数据:
+#   docker-compose down -v
