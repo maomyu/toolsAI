@@ -33,6 +33,7 @@ Thumbs.db
 .cache/
 maoyu.site_nginx/
 
+# Claude Code
 CLAUDE.md
 
 # 部署脚本
@@ -45,3 +46,7 @@ deploy.sh
 
 # toolsAI-deploy 目录
 toolsAI-deploy/
+
+# 文档
+PRD.md
+Supabase.md
